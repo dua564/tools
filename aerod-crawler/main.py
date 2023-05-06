@@ -36,7 +36,7 @@ def main():
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-   #main()
-   find_longest_block()
+   ##df = pd.read_csv('my_data.csv')
+   main()
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/

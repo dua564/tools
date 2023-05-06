@@ -104,12 +104,11 @@ def make_dataframe(date):
     df = pd.DataFrame(plane_dict)
     df = df.sort_values(['plane', 'time'])
 
+    df = find_longest_block(df)
     print (df)
 
 
-def find_longest_block():
-    # load csv file back into dataframe
-    df = pd.read_csv('my_data.csv')
+def find_longest_block(df):
     df['time'] = pd.to_datetime(df['time'])
 
     earliest_time = df.groupby('plane')['time'].min()
@@ -130,5 +129,4 @@ def find_longest_block():
     df['time_diff'] = df['time_diff'].apply(
         lambda x: '{:02d}:{:02d}'.format(int(x.seconds / 3600), int((x.seconds / 60) % 60)))
 
-
-    print (df)
+    return df
