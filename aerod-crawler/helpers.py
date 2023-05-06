@@ -6,6 +6,10 @@ import pandas as pd
 from collections import OrderedDict
 from datetime import datetime, timedelta
 import config
+import smtplib
+
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 ###############     HELPERS   ################################
 
@@ -33,7 +37,7 @@ def change_date(date):
 
     return data
 
-def make_weekend_list():
+def make_weekend_list(days_to_find=45):
     today = datetime.today()
     date = today.strftime('%a %m/%d/%Y')
 
@@ -44,7 +48,7 @@ def make_weekend_list():
     date_list = []
 
     # Loop through the next 45 days
-    for i in range(45):
+    for i in range(days_to_find):
         # Add the current date to the list
         date_list.append(today.strftime('%a %m/%d/%Y'))
         # Increment the date by one day
@@ -65,7 +69,7 @@ def make_weekend_list():
     return non_weekday_list
 
 
-def make_dataframe(date):
+def make_base_dataframe(date):
     df = pd.DataFrame(columns=["plane", "number"])
     plane_dict = OrderedDict()
     plane_dict["plane"] = []
@@ -104,29 +108,98 @@ def make_dataframe(date):
     df = pd.DataFrame(plane_dict)
     df = df.sort_values(['plane', 'time'])
 
-    df = find_longest_block(df)
-    print (df)
-
-
-def find_longest_block(df):
-    df['time'] = pd.to_datetime(df['time'])
-
-    earliest_time = df.groupby('plane')['time'].min()
-    latest_time = df.groupby('plane')['time'].max()
-
-    time_diff = latest_time - earliest_time
-
-    df = pd.DataFrame({
-        'earliest_time': earliest_time,
-        'latest_time': latest_time,
-        'time_diff': time_diff
-    })
-
-    df['time_diff'] = df['time_diff'] + pd.Timedelta(minutes=30)
-
-    df['earliest_time'] = df['earliest_time'].dt.strftime('%H:%M')
-    df['latest_time'] = df['latest_time'].dt.strftime('%H:%M')
-    df['time_diff'] = df['time_diff'].apply(
-        lambda x: '{:02d}:{:02d}'.format(int(x.seconds / 3600), int((x.seconds / 60) % 60)))
 
     return df
+
+
+def make_duration_df(df):
+    plane_dict = df.groupby('plane').apply(lambda x: x[['time', 'date']].to_dict(orient='list')).to_dict()
+    duration_dict = {}
+
+    for key, value in plane_dict.items():
+        plane = key
+        date = value['date'][0]
+        times = value['time']
+        longest_blocks, duration = find_longest_block(times)
+
+        duration_dict[plane] = {'blocks': longest_blocks, 'duration': duration, 'date': date}
+
+    # dictionary to dataframe
+    df = pd.DataFrame([(k, v['blocks'], v['duration'], v['date']) for k, v in duration_dict.items()],
+                      columns=['plane', 'blocks', 'duration', 'date'])
+
+    return df
+
+
+
+def find_longest_block(times):
+
+    # convert strings to datetime objects
+    times = [datetime.strptime(t, '%H:%M') for t in times]
+
+    consecutive_times = []
+    start_time = end_time = None
+    for i in range(len(times)):
+        if i == 0 or times[i - 1] != times[i] - timedelta(minutes=30):
+            start_time = times[i]
+        end_time = times[i]
+        if i == len(times) - 1 or times[i + 1] != times[i] + timedelta(minutes=30):
+            consecutive_times.append((start_time, end_time))
+            start_time = end_time = None
+
+    consecutive_times_str = []
+    for start_time, end_time in consecutive_times:
+        start_time_str = start_time.strftime('%H:%M')
+        end_time_str = end_time.strftime('%H:%M')
+        consecutive_times_str.append((start_time_str, end_time_str))
+
+    durations = []
+    for start, end in consecutive_times_str:
+        duration = datetime.strptime(end, '%H:%M') - datetime.strptime(start, '%H:%M')
+        durations.append(duration)
+
+    hours = []
+
+    durations_list = [str(duration) for duration in durations]
+
+    for duration in durations_list:
+        h, m, s = map(int, duration.split(':'))
+        duration_in_seconds = timedelta(hours=h, minutes=m, seconds=s).total_seconds()
+        duration_in_hours = duration_in_seconds / 3600
+        hours.append(duration_in_hours)
+    hours_with_half = [h + 0.5 for h in hours]
+    ##hours_with_suffix= [f"{h}h" for h in hours_with_half]
+    return(consecutive_times_str, hours_with_half)
+
+
+
+
+
+
+def send_email(df):
+
+
+    table_html = '<html><body>' + df.to_html() + '</body></html>'
+
+    # Set up email parameters
+    sender_email = 'nikhil9duapython@gmail.com'
+    sender_password = 'qprzjxfftpcjyfrf'
+    receiver_email = 'nikhil9dua@gmail.com'
+    subject = 'Example email with pandas dataframe'
+
+    # Create the email message
+    msg = MIMEMultipart('alternative')
+    msg['From'] = sender_email
+    msg['To'] = receiver_email
+    msg['Subject'] = subject
+
+    # Add the html table to the message
+    html_part = MIMEText(table_html, 'html')
+    msg.attach(html_part)
+
+    # Connect to SMTP server and send the email
+    smtp_server = smtplib.SMTP('smtp.gmail.com', 587)
+    smtp_server.starttls()
+    smtp_server.login(sender_email, sender_password)
+    smtp_server.sendmail(sender_email, receiver_email, msg.as_string())
+    smtp_server.quit()
