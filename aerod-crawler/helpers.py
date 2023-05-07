@@ -85,7 +85,7 @@ def make_base_dataframe(date):
     input_tag = soup.find('input', {'id': 'ctl00_ContentPlaceHolder1_DropDate1'})
     date = input_tag['value']
 
-    print("Current Date is: ", date)
+    #print("Current Date is: ", date)
 
     # Find all <td> tags that have a style attribute
     td_tags = soup.find_all("td", attrs={
@@ -113,6 +113,9 @@ def make_base_dataframe(date):
 
 
 def make_duration_df(df):
+
+    ##TODO Add ability to skip everything before 8am and after 7pm 
+
     plane_dict = df.groupby('plane').apply(lambda x: x[['time', 'date']].to_dict(orient='list')).to_dict()
     duration_dict = {}
 
