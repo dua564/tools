@@ -68,7 +68,7 @@ def app():
 
     print(combined_df)
 
-    if desired_inputs["send_email"] == 'YES':
+    if desired_inputs["send_email"] == 'YES' and not combined_df.empty :
         send_email(combined_df, email_address=desired_inputs["email_address"])
     pass
 
