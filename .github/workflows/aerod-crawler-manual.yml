@@ -5,13 +5,40 @@ name: Aerodynamic Crawler
 on:
   workflow_dispatch:
     inputs:
-        name:
-          description: "Who to greet"
-          default: "World"
+        planes:
+          description: "Planes to Choose. Enter as 12234,54102 or ALL"
+          default: 'ALL'
+          required: false
+          type: string
+        days:
+          description: "Lookahead days"
+          default: 45
+          type: choice
+          options:
+            - 15
+            - 30
+            - 45
+            - 60
+        target_date:
+          description: "Target Date (optional, doesn't work)"
+          required: false
+          default: "NONE"
+        duration_hrs:
+          description: "Minimum duration to find (hrs)"
+          required: true
+          default: 2
+        starting_time:
+          description: "Starting Time (HH:MM) for Slot"
+          required: true
+          default: '09:00'
+        ending_time:
+          description: "Ending Time (HH:MM) for Slot"
+          required: true
+          default: '20:00'
+
 defaults:
   run:
     working-directory: aerod-crawler
-
   
 jobs:
   build:
@@ -31,12 +58,12 @@ jobs:
         ASP_NET_SessionId: ${{ secrets.ASP_NET_SESSIONID }}
         AEROD_USERNAME: ${{secrets.AEROD_USERNAME}}
         AEROD_PASSWORD: ${{secrets.AEROD_USERNAME}}
-        PLANES: 'ALL'
-        DAYS: 45
-        TARGET_DATE: 'NONE'
-        DURATION_HRS: 2
-        STARTING_TIME: '09:00'
-        ENDING_TIME: '20:00'
+        PLANES:  ${{ inputs.planes }}
+        DAYS:  ${{ inputs.days }}
+        TARGET_DATE:  ${{ inputs.target_date }}
+        DURATION_HRS:  ${{ inputs.duration_hrs }}
+        STARTING_TIME:  ${{ inputs.starting_time }}
+        ENDING_TIME: ${{ inputs.ending_time }}
       run: |
         python main.py 
       

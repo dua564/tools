@@ -33,7 +33,6 @@ def app():
     ASP_NET_SessionId = os.environ.get('ASP_NET_SessionId')
 
 
-
     print("***********************")
     print ("SETTINGS:")
     print ("   Planes to find:", desired_inputs["planes"])
