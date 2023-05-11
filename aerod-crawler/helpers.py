@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import config
 import smtplib
 
+
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
@@ -68,8 +69,37 @@ def make_weekend_list(days_to_find=45):
 
     return non_weekday_list
 
+def check_in_filter(plane, time, desired_inputs):
 
-def make_base_dataframe(date):
+    is_plane_good = False
+    is_time_good = False
+
+    ## Check if plane of interest is good and within desired inputs for planes
+    if plane in desired_inputs["planes"] or "ALL" in desired_inputs["planes"]:
+        #print("Good Plane: ", plane)
+        is_plane_good = True
+    else:
+        #print("Bad Plane: ", plane)
+        is_plane_good = False
+
+    time_obj = datetime.strptime(time, '%H:%M').time()
+    start_time_obj = datetime.strptime(desired_inputs["starting_time"], '%H:%M').time()
+    end_time_obj = datetime.strptime(desired_inputs["ending_time"], '%H:%M').time()
+
+    ## Check if time is good and within desired inputs for time
+    if start_time_obj <= time_obj < end_time_obj:
+       # print(time + " is between " + desired_inputs["starting_time"]
+       #       + " and " + desired_inputs["ending_time"])
+       is_time_good = True
+    else:
+        # print(time + " is not between " + desired_inputs["starting_time"]
+        #      + " and " + desired_inputs["ending_time"])
+        is_time_good = False
+    if is_plane_good and is_time_good:
+        return True
+
+
+def make_base_dataframe(date, desired_inputs):
     df = pd.DataFrame(columns=["plane", "number"])
     plane_dict = OrderedDict()
     plane_dict["plane"] = []
@@ -101,9 +131,10 @@ def make_base_dataframe(date):
                 plane = match.group(1)
                 number = match.group(2)
                 time = increment_to_time(int(number))
-                plane_dict["plane"].append(plane)
-                plane_dict["time"].append(time)
-                plane_dict["date"].append(date)
+                if(check_in_filter(plane, time, desired_inputs)):
+                    plane_dict["plane"].append(plane)
+                    plane_dict["time"].append(time)
+                    plane_dict["date"].append(date)
 
     df = pd.DataFrame(plane_dict)
     df = df.sort_values(['plane', 'time'])
@@ -113,8 +144,6 @@ def make_base_dataframe(date):
 
 
 def make_duration_df(df):
-
-    ##TODO Add ability to skip everything before 8am and after 7pm 
 
     plane_dict = df.groupby('plane').apply(lambda x: x[['time', 'date']].to_dict(orient='list')).to_dict()
     duration_dict = {}

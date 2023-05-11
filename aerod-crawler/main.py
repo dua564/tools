@@ -74,17 +74,25 @@ def cli_app(planes, days):
     click.secho("Days:{}".format(days), fg='blue')
 
 def app():
-    planes = os.environ.get('PLANES', '12234,54102').split(',')
-    days = int(os.environ.get('DAYS', '15'))
-    duration_hrs = int(os.environ.get('DURATION_HRS', '3'))
 
-    print("**********")
+    desired_inputs = {}
+
+    desired_inputs["planes"] = os.environ.get('PLANES', '2773F').split(',') ##List of Type ['12234', '54102']
+    desired_inputs["days"] = int(os.environ.get('DAYS', '15'))
+    desired_inputs["targeted_date"] = os.environ.get('TARGETED_DATE', 'NONE') ##TODO: ADD
+    desired_inputs["duration_hrs"] = int(os.environ.get('DURATION_HRS', '3'))
+    desired_inputs["starting_time"] = os.environ.get('STARTING_TIME', '09:00')
+    desired_inputs["ending_time"] = os.environ.get('ENDING_TIME', '20:00')
+
+    print("***********************")
     print ("SETTINGS:")
-    print ("   Planes to find:", planes)
-    print ("   Lookahead Days:", days)
-    print ("   Slot Duration Minimum:", duration_hrs)
-    print("**********")
-
+    print ("   Planes to find:", desired_inputs["planes"])
+    print ("   Lookahead Days:", desired_inputs["days"])
+    print ("   Target Dates:",  desired_inputs["targeted_date"])
+    print ("   Slot Duration Minimum:", desired_inputs["duration_hrs"])
+    print("   Starting Time:", desired_inputs["starting_time"])
+    print("   Ending Time:", desired_inputs["ending_time"])
+    print("***********************")
 
 
     #Initialize Empty DF
@@ -97,21 +105,23 @@ def app():
     response = session.post('https://aerod.paperlessfbo.com/FCMS1.aspx', params=config.params, cookies=config.cookies,
                             headers=config.headers, data=config.data)
 
-    ####    Make a DF for all weekends in the next 45 days   ####
-    non_weekday_list = make_weekend_list(days_to_find=days)
+    ####    Make a DF for all weekends in the next X days   ####
+    non_weekday_list = make_weekend_list(days_to_find=desired_inputs["days"])
     for date in non_weekday_list:
         print("Making DF for Date", date)
-        df = make_base_dataframe(date)
-        df = make_duration_df(df)
-        combined_df = pd.concat([combined_df, df], ignore_index=False)
+        df = make_base_dataframe(date, desired_inputs)
+        if not df.empty:
+            df = make_duration_df(df)
+            combined_df = pd.concat([combined_df, df], ignore_index=False)
 
     ## Filter DF Based on Conditions
-    if 'ALL' in planes:
-        df_filtered = combined_df
-    else:
-        df_filtered = combined_df[combined_df['plane'].isin(planes)]
+    # if 'ALL' in planes:
+    #     df_filtered = combined_df
+    # else:
+    #     df_filtered = combined_df[combined_df['plane'].isin(planes)]
 
-    print(df_filtered)
+    print(combined_df)
+    ##print(df_filtered)
     pass
 
 # Press the green button in the gutter to run the script.
