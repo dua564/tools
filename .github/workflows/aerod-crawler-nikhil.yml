@@ -5,7 +5,7 @@ name: Nikhil Scheduled Runs - Aerodynamic Crawler
 on:
  schedule:
     #- cron: '0 11 * * 1-5' #"At 11:00 on every day-of-week from Monday through Friday"
-    - cron: '*/3 * * * *' 
+    - cron: '*/5 * * * *' 
 
 defaults:
   run:
