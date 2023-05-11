@@ -28,8 +28,9 @@ def app():
     desired_inputs["ending_time"] = os.environ.get('ENDING_TIME', '20:00')
 
     ##TODO ADD TO CONFI.PY
-    USERNAME = os.environ.get('USERNAME')
-    PASSWORD = os.environ.get('PASSWORD')
+    USERNAME = os.environ.get('AEROD_USERNAME')
+    PASSWORD = os.environ.get('AEROD_PASSWORD')
+    ASP_NET_SessionId = os.environ.get('ASP_NET_SessionId')
 
     print("***********************")
     print ("SETTINGS:")

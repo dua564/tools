@@ -1,5 +1,7 @@
+import os
+
 cookies = {
-    'ASP.NET_SessionId': 'jhrdojjbcdngmavq31rqlf2q',
+    'ASP.NET_SessionId': os.environ.get('ASP_NET_SessionId'),
     'P141uGPDR': 'YES',
     'P141uM': 'NEW',
 }
@@ -10,7 +12,6 @@ headers = {
     'accept-language': 'en-US,en;q=0.9',
     'cache-control': 'max-age=0',
     'content-type': 'application/x-www-form-urlencoded',
-    # 'cookie': 'ASP.NET_SessionId=jhrdojjbcdngmavq31rqlf2q; P141uGPDR=YES; P141uM=NEW',
     'origin': 'https://aerod.paperlessfbo.com',
     'referer': 'https://aerod.paperlessfbo.com/FCMS1.aspx?MSG=1',
     'sec-ch-ua': '"Chromium";v="110", "Not A(Brand";v="24", "Google Chrome";v="110"',
@@ -41,7 +42,7 @@ data = {
     'PixelRatio': '2',
     'TextError': 'For security reasons your session has expired. Please authenticate again',
     'TextBox1': 'Please Log In',
-    'txtUserName': 'ndua',
-    'txtPassword': 'chinku564',
+    'txtUserName': os.environ.get('AEROD_USERNAME'),
+    'txtPassword': os.environ.get('AEROD_PASSWORD'),
     'ButtLogin': 'Log In',
 }
