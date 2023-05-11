@@ -8,7 +8,7 @@ on:
         planes:
           description: "Planes to Choose. Enter as 12234,54102 or ALL"
           default: 'ALL'
-          required: false
+          required: true
           type: string
         days:
           description: "Lookahead days"
