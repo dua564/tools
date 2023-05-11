@@ -27,10 +27,12 @@ def app():
     desired_inputs["starting_time"] = os.environ.get('STARTING_TIME', '09:00')
     desired_inputs["ending_time"] = os.environ.get('ENDING_TIME', '20:00')
 
-    ##TODO ADD TO CONFI.PY
+    #Ref in config.py
     USERNAME = os.environ.get('AEROD_USERNAME')
     PASSWORD = os.environ.get('AEROD_PASSWORD')
     ASP_NET_SessionId = os.environ.get('ASP_NET_SessionId')
+
+
 
     print("***********************")
     print ("SETTINGS:")
