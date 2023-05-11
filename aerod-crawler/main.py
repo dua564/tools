@@ -20,12 +20,16 @@ def app():
 
     desired_inputs = {}
 
-    desired_inputs["planes"] = os.environ.get('PLANES', '12234,968RC').split(',') ##List of Type ['12234', '54102']
+    desired_inputs["planes"] = os.environ.get('PLANES', 'ALL').split(',') ##List of Type ['12234', '54102']
     desired_inputs["days"] = int(os.environ.get('DAYS', '15'))
     desired_inputs["targeted_date"] = os.environ.get('TARGETED_DATE', 'NONE') ##TODO: ADD
     desired_inputs["duration_hrs"] = int(os.environ.get('DURATION_HRS', '2'))
     desired_inputs["starting_time"] = os.environ.get('STARTING_TIME', '09:00')
     desired_inputs["ending_time"] = os.environ.get('ENDING_TIME', '20:00')
+
+    ##TODO ADD TO CONFI.PY
+    USERNAME = os.environ.get('USERNAME')
+    PASSWORD = os.environ.get('PASSWORD')
 
     print("***********************")
     print ("SETTINGS:")
