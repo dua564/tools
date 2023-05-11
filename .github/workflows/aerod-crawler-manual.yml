@@ -32,7 +32,7 @@ jobs:
         AEROD_USERNAME: ${{secrets.AEROD_USERNAME}}
         AEROD_PASSWORD: ${{secrets.AEROD_USERNAME}}
         PLANES: 'ALL'
-        DAYS: 15
+        DAYS: 45
         TARGET_DATE: 'NONE'
         DURATION_HRS: 2
         STARTING_TIME: '09:00'
