@@ -75,8 +75,8 @@ jobs:
         DURATION_HRS:  ${{ inputs.duration_hrs }}
         STARTING_TIME:  ${{ inputs.starting_time }}
         ENDING_TIME: ${{ inputs.ending_time }}
-        SEND_EMAIL: {{inputs.send_email}}
-        EMAIL_ADDRESS: {{inputs.email_address}}
+        SEND_EMAIL: ${{inputs.send_email}}
+        EMAIL_ADDRESS: ${{inputs.email_address}}
       run: |
         python main.py 
       
