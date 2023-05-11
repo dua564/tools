@@ -1,7 +1,7 @@
 
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
-name: Aerodynamic Crawler 
+name: Nikhil Scheduled Runs - Aerodynamic Crawler 
 on:
  schedule:
     #- cron: '0 11 * * 1-5' #"At 11:00 on every day-of-week from Monday through Friday"
