@@ -98,6 +98,19 @@ def check_in_filter(plane, time, desired_inputs):
     if is_plane_good and is_time_good:
         return True
 
+def drop_durations(longest_blocks, duration, desired_inputs):
+
+    new_duration_list = []
+    new_longest_block = []
+
+
+    for dur, block in zip(duration, longest_blocks):
+        #print(dur, block)
+        if dur >= desired_inputs["duration_hrs"]:
+            new_duration_list.append(dur)
+            new_longest_block.append(block)
+
+    return new_longest_block, new_duration_list
 
 def make_base_dataframe(date, desired_inputs):
     df = pd.DataFrame(columns=["plane", "number"])
@@ -143,7 +156,7 @@ def make_base_dataframe(date, desired_inputs):
     return df
 
 
-def make_duration_df(df):
+def make_duration_df(df, desired_inputs):
 
     plane_dict = df.groupby('plane').apply(lambda x: x[['time', 'date']].to_dict(orient='list')).to_dict()
     duration_dict = {}
@@ -153,12 +166,15 @@ def make_duration_df(df):
         date = value['date'][0]
         times = value['time']
         longest_blocks, duration = find_longest_block(times)
+        longest_blocks, duration = drop_durations(longest_blocks, duration, desired_inputs)
 
-        duration_dict[plane] = {'blocks': longest_blocks, 'duration': duration, 'date': date}
+        if len(longest_blocks) > 0 and len (duration) > 0: #Drop if empty
+            duration_dict[plane] = {'blocks': longest_blocks, 'duration': duration, 'date': date}
 
     # dictionary to dataframe
     df = pd.DataFrame([(k, v['blocks'], v['duration'], v['date']) for k, v in duration_dict.items()],
                       columns=['plane', 'blocks', 'duration', 'date'])
+
 
     return df
 

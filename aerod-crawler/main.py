@@ -20,10 +20,10 @@ def app():
 
     desired_inputs = {}
 
-    desired_inputs["planes"] = os.environ.get('PLANES', '2773F').split(',') ##List of Type ['12234', '54102']
+    desired_inputs["planes"] = os.environ.get('PLANES', '12234,968RC').split(',') ##List of Type ['12234', '54102']
     desired_inputs["days"] = int(os.environ.get('DAYS', '15'))
     desired_inputs["targeted_date"] = os.environ.get('TARGETED_DATE', 'NONE') ##TODO: ADD
-    desired_inputs["duration_hrs"] = int(os.environ.get('DURATION_HRS', '3'))
+    desired_inputs["duration_hrs"] = int(os.environ.get('DURATION_HRS', '2'))
     desired_inputs["starting_time"] = os.environ.get('STARTING_TIME', '09:00')
     desired_inputs["ending_time"] = os.environ.get('ENDING_TIME', '20:00')
 
@@ -53,7 +53,7 @@ def app():
         print("Making DF for Date", date)
         df = make_base_dataframe(date, desired_inputs)
         if not df.empty:
-            df = make_duration_df(df)
+            df = make_duration_df(df, desired_inputs)
             combined_df = pd.concat([combined_df, df], ignore_index=False)
 
     print(combined_df)
