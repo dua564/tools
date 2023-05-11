@@ -29,7 +29,7 @@ jobs:
         ASP_NET_SessionId: ${{ secrets.ASP_NET_SESSIONID }}
         AEROD_USERNAME: ${{secrets.AEROD_USERNAME}}
         AEROD_PASSWORD: ${{secrets.AEROD_PASSWORD}}
-        PLANES:  'ALL'
+        PLANES:  '968RC,54102'
         DAYS:  30
         TARGET_DATE:  'NONE'
         DURATION_HRS:  3
