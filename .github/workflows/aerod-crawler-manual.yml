@@ -35,6 +35,17 @@ on:
           description: "Ending Time (HH:MM) for Slot"
           required: true
           default: '20:00'
+        send_email:
+          description: "Send Email?"
+          default: 'NO'
+          type: choice
+          options:
+            - 'YES'
+            - 'NO'
+        email_address:
+          description: "Email Address to notify"
+          required: false
+          default: 'nikhil9dua@gmail.com'
 
 defaults:
   run:
@@ -64,6 +75,8 @@ jobs:
         DURATION_HRS:  ${{ inputs.duration_hrs }}
         STARTING_TIME:  ${{ inputs.starting_time }}
         ENDING_TIME: ${{ inputs.ending_time }}
+        SEND_EMAIL: {{inputs.send_email}}
+        EMAIL_ADDRESS: {{inputs.email_address}}
       run: |
         python main.py 
       

@@ -224,7 +224,7 @@ def find_longest_block(times):
 
 
 
-def send_email(df):
+def send_email(df, email_address):
 
 
     table_html = '<html><body>' + df.to_html() + '</body></html>'
@@ -232,7 +232,7 @@ def send_email(df):
     # Set up email parameters
     sender_email = 'nikhil9duapython@gmail.com'
     sender_password = 'qprzjxfftpcjyfrf'
-    receiver_email = 'nikhil9dua@gmail.com'
+    receiver_email = email_address
     subject = 'Example email with pandas dataframe'
 
     # Create the email message

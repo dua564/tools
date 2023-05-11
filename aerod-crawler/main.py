@@ -26,6 +26,8 @@ def app():
     desired_inputs["duration_hrs"] = int(os.environ.get('DURATION_HRS', '2'))
     desired_inputs["starting_time"] = os.environ.get('STARTING_TIME', '09:00')
     desired_inputs["ending_time"] = os.environ.get('ENDING_TIME', '20:00')
+    desired_inputs["send_email"] = os.environ.get('SEND_EMAIL', 'NO')
+    desired_inputs["email_address"] = os.environ.get('EMAIL_ADDRESS', 'nikhil9dua@gmail.com')
 
     #Ref in config.py
     USERNAME = os.environ.get('AEROD_USERNAME')
@@ -41,6 +43,8 @@ def app():
     print ("   Slot Duration Minimum:", desired_inputs["duration_hrs"])
     print("   Starting Time:", desired_inputs["starting_time"])
     print("   Ending Time:", desired_inputs["ending_time"])
+    print("   Send Email?:", desired_inputs["send_email"])
+    print("   Email Address:",  desired_inputs["email_address"])
     print("***********************")
 
     #Initialize Empty DF
@@ -64,8 +68,8 @@ def app():
 
     print(combined_df)
 
-    #send_email(combined_df)
-    ##print(df_filtered)
+    if desired_inputs["send_email"] == 'YES':
+        send_email(combined_df, email_address=desired_inputs["email_address"])
     pass
 
 # Press the green button in the gutter to run the script.
