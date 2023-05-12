@@ -233,7 +233,7 @@ def send_email(df, email_address):
     sender_email = 'nikhil9duapython@gmail.com'
     sender_password = 'qprzjxfftpcjyfrf'
     receiver_email = email_address
-    subject = 'Example email with pandas dataframe'
+    subject = 'Aerod Crawler - Notification'
 
     # Create the email message
     msg = MIMEMultipart('alternative')
