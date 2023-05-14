@@ -29,10 +29,10 @@ jobs:
         ASP_NET_SessionId: ${{ secrets.ASP_NET_SESSIONID }}
         AEROD_USERNAME: ${{secrets.AEROD_USERNAME}}
         AEROD_PASSWORD: ${{secrets.AEROD_PASSWORD}}
-        PLANES:  '968RC,54102'
+        PLANES:  '968RC,54102,9027H'
         DAYS:  30
         TARGET_DATE:  'NONE'
-        DURATION_HRS:  3
+        DURATION_HRS:  2
         STARTING_TIME:  '09:00'
         ENDING_TIME: '20:00'
         SEND_EMAIL: 'YES'
