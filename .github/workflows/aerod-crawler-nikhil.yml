@@ -4,8 +4,8 @@
 name: Nikhil Scheduled Runs - Aerodynamic Crawler 
 on:
  schedule:
-   #- cron: '0 8,14,19 * * *' #Runs at 08:00, 14:00 and 19:00 every day
-    - cron: '0 0 1 1 *'  #Disables Cron Job 
+   - cron: '0 8,14,19 * * *' #Runs at 08:00, 14:00 and 19:00 every day
+    #- cron: '0 0 1 1 *'  #Disables Cron Job 
 
 defaults:
   run:
@@ -30,9 +30,9 @@ jobs:
         AEROD_USERNAME: ${{secrets.AEROD_USERNAME}}
         AEROD_PASSWORD: ${{secrets.AEROD_PASSWORD}}
         PLANES:  '2838Q'
-        DAYS:  30
+        DAYS:  15
         TARGET_DATE:  'NONE'
-        DURATION_HRS:  4
+        DURATION_HRS:  2
         STARTING_TIME:  '09:00'
         ENDING_TIME: '20:00'
         SEND_EMAIL: 'YES'
