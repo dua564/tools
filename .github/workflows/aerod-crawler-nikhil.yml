@@ -4,8 +4,8 @@
 name: Nikhil Scheduled Runs - Aerodynamic Crawler 
 on:
  schedule:
-   - cron: '0 8,14,19 * * *' #Runs at 08:00, 14:00 and 19:00 every day
-    #- cron: '0 0 1 1 *'  #Disables Cron Job 
+   #- cron: '0 8,14,19 * * *' #Runs at 08:00, 14:00 and 19:00 every day
+    - cron: '0 0 1 1 *'  #Disables Cron Job 
 
 defaults:
   run:
